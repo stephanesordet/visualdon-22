@@ -4,31 +4,30 @@ import { json } from 'd3';
 d3.select("body").append("div").attr("class","container");
 d3.select(".container").append("strong").text("Nombre de posts par utilisateur : ");
 
-// Var
+
 let post_filtered;
 let maxBodyLength=0;
 let userIdMaxBodyLength;
 let tab=[];
 let i=0;
 
-// -------- Fetch data JSON
+
 Promise.all([
   json('https://jsonplaceholder.typicode.com/posts'),
   json('https://jsonplaceholder.typicode.com/users')
 ])
 .then(([posts, users]) =>  {
 
-// -------- Print user with their number of posts
+
     users.forEach(usr => {
       post_filtered = posts.filter(post=>post.userId === usr.id)
-      //console.log(post_filtered)
       d3.select(".container").append("p").text(usr.name+" : "+post_filtered.length+" posts");
     })
 
 
-// -------- Most long post
+
     posts.forEach(post_index => {
-      //If for sorting the longest body and save who is the owner for this body
+   
     if (post_index.body.length>maxBodyLength) {
       maxBodyLength = post_index.body.length;
       userIdMaxBodyLength = post_index.userId;
@@ -38,7 +37,8 @@ Promise.all([
     d3.select(".container").append("strong").text("Plus long post : "); 
     d3.select(".container").append("p").text(users[userIdMaxBodyLength].name+", avec un post d'une longueur de "+maxBodyLength+" caractères");
 
-    //------- Dessiner avec les données -------
+    //Dessiner avec les données 
+
     const WIDTH = 500
     const HEIGHT = 500
 
@@ -46,14 +46,14 @@ Promise.all([
     d3.select(".mon-svg").append("svg");
     const myDiv2 = d3.select("svg").attr("width", WIDTH).attr("height", HEIGHT)
   
-    //Loop that create a tab with number of users as index and number of post as value
+    
     users.forEach(usr => {
       post_filtered = posts.filter(post=>post.userId === usr.id)
       tab[i]= post_filtered.length;
       i++;
     })
 
-    //Create chart with precedent tab[]
+  
     const widthRect = 30;
     myDiv2.selectAll("rect")
       .data(tab)
